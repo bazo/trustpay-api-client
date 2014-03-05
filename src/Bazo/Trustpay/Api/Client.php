@@ -45,10 +45,9 @@ class Client
 
 
 
-	public function __construct($aid, $ref, $key, $mode = self::MODE_PRODUCTION)
+	public function __construct($aid, $key, $mode = self::MODE_PRODUCTION)
 	{
 		$this->aid = $aid;
-		$this->ref = $ref;
 		$this->key = $key;
 		if ($mode === self::MODE_PRODUCTION) {
 			$this->baseUri = self::PRODUCTION_URI;
@@ -58,15 +57,15 @@ class Client
 	}
 
 
-	public function generatePaymentURI($amount, $currency = Currency::EUR, $lang = Language::SLOVAK, $description = '', $successUrl = NULL, $cancelUrl = NULL, $errorUrl = NULL)
+	public function generatePaymentURI($amount, $currency = Currency::EUR, $lang = Language::SLOVAK, $ref = '', $description = '', $successUrl = NULL, $cancelUrl = NULL, $errorUrl = NULL)
 	{
-		$message = $this->aid . $amount . $currency . $this->ref;
+		$message = $this->aid . $amount . $currency . $ref;
 
 		$query = array(
 			'AID' => $this->aid,
 			'AMT' => $amount,
 			'CUR' => $currency,
-			'REF' => $this->ref,
+			'REF' => $ref,
 			'SIG' => $this->signRequest($message),
 			'LNG' => $lang,
 			'DSC' => $description
