@@ -1,0 +1,19 @@
+{
+	"name": "bazo/trustpay-api-client",
+	"authors": [
+		{
+			"name": "Martin Bazik",
+			"email": "martin@bazik.sk"
+		}
+	],
+	"require": {
+	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	},
+	"autoload": {
+		"psr-0": {
+			"Bazo": "src/"
+		}
+	}
+}
