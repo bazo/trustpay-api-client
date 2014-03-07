@@ -4,6 +4,7 @@ namespace Bazo\Trustpay\Api;
 
 use Bazo\Trustpay\Currency;
 use Bazo\Trustpay\Language;
+use Bazo\Trustpay\RuntimeException;
 
 
 
@@ -44,7 +45,7 @@ class Client
 
 
 
-	public function __construct($aid, $key, $currency = Bazo\Trustpay\Currency::EUR, $mode = self::MODE_PRODUCTION)
+	public function __construct($aid, $key, $currency = Currency::EUR, $mode = self::MODE_PRODUCTION)
 	{
 		$this->aid = $aid;
 		$this->key = $key;
@@ -81,11 +82,11 @@ class Client
 	public function verifyNotificationParameters($aid, $typ, $amt, $cur, $ref, $res, $tid, $oid, $tss, $sig)
 	{
 		if ($aid !== $this->aid) {
-			throw new \Bazo\Trustpay\RuntimeException(sprintf('Given AID not correct. %s !== %s', $this->aid, $aid));
+			throw new RuntimeException(sprintf('Given AID not correct. %s !== %s', $this->aid, $aid));
 		}
 
 		if ($cur !== $this->currency) {
-			throw new \Bazo\Trustpay\RuntimeException(sprintf('Given CUR not correct. %s !== %s', $this->currency, $cur));
+			throw new RuntimeException(sprintf('Given CUR not correct. %s !== %s', $this->currency, $cur));
 		}
 
 		$message = $aid . $typ . $amt . $cur . $ref . $res . $tid . $oid . $tss;
@@ -93,7 +94,7 @@ class Client
 		$signature = $this->signRequest($message);
 
 		if ($sig !== $signature) {
-			throw new \Bazo\Trustpay\RuntimeException(sprintf('Signature mismatch. %s !== %s', $this->currency, $cur));
+			throw new RuntimeException(sprintf('Signature mismatch. %s !== %s', $this->currency, $cur));
 		}
 	}
 
