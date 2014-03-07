@@ -18,6 +18,8 @@ class Client
 	const TEST_URI = 'https://test.trustpay.eu/mapi/pay.aspx';
 	const MODE_TEST = 'mode.test';
 	const MODE_PRODUCTION = 'mode.production';
+	const TEST_IP = '81.89.63.19';
+	const PRODUCTION_IP = '81.89.63.16';
 
 
 
@@ -42,6 +44,7 @@ class Client
 
 	/** @var string */
 	private $baseUri;
+	private $mode;
 
 
 
@@ -56,6 +59,8 @@ class Client
 		} else {
 			$this->baseUri = self::TEST_URI;
 		}
+
+		$this->mode = $mode;
 	}
 
 
@@ -76,6 +81,23 @@ class Client
 		);
 
 		return $this->baseUri . '?' . http_build_query($query);
+	}
+
+
+	public function verifyIP($ip)
+	{
+		switch ($this->mode) {
+			case self::MODE_TEST:
+				$expectedIp = self::TEST_IP;
+				break;
+			case self::MODE_PRODUCTION:
+				$expectedIp = self::PRODUCTION_IP;
+				break;
+		}
+
+		if ($ip !== $expectedIp) {
+			throw new RuntimeException(sprintf('Given IP does not match expected IP. %s !== %s', $expectedIp, $ip));
+		}
 	}
 
 
