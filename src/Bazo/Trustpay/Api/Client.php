@@ -28,27 +28,28 @@ class Client
 	private $aid;
 
 	/**
-	 * Reference
-	 * Merchant’s payment identification
-	 * @var string
-	 */
-	private $ref;
-
-	/**
 	 * Signing key
 	 * @var type @var string
 	 */
 	private $key;
+
+	/**
+	 * Currency of the payment same as currency of merchant account
+	 * @var string
+	 */
+	private $currency;
 
 	/** @var string */
 	private $baseUri;
 
 
 
-	public function __construct($aid, $key, $mode = self::MODE_PRODUCTION)
+	public function __construct($aid, $key, $currency = Bazo\Trustpay\Currency::EUR, $mode = self::MODE_PRODUCTION)
 	{
 		$this->aid = $aid;
 		$this->key = $key;
+		$this->currency = $currency;
+		
 		if ($mode === self::MODE_PRODUCTION) {
 			$this->baseUri = self::PRODUCTION_URI;
 		} else {
@@ -57,14 +58,16 @@ class Client
 	}
 
 
-	public function generatePaymentURI($amount, $currency = Currency::EUR, $lang = Language::SLOVAK, $ref = '', $description = '', $successUrl = NULL, $cancelUrl = NULL, $errorUrl = NULL)
+	public function generatePaymentURI($amount, $lang = Language::SLOVAK, $ref = '', $description = '', $successUrl = NULL, $cancelUrl = NULL, $errorUrl = NULL)
 	{
-		$message = $this->aid . $amount . $currency . $ref;
+		$amount = number_format($amount, 2, '.', '');
+
+		$message = $this->aid . (string) $amount . $this->currency . $ref;
 
 		$query = array(
 			'AID' => $this->aid,
-			'AMT' => number_format($amount, 2, '.', ''),
-			'CUR' => $currency,
+			'AMT' => $amount,
+			'CUR' => $this->currency,
 			'REF' => $ref,
 			'SIG' => $this->signRequest($message),
 			'LNG' => $lang,
