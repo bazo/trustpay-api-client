@@ -63,7 +63,7 @@ class Client
 
 		$query = array(
 			'AID' => $this->aid,
-			'AMT' => $amount,
+			'AMT' => round($amount, 2),
 			'CUR' => $currency,
 			'REF' => $ref,
 			'SIG' => $this->signRequest($message),
