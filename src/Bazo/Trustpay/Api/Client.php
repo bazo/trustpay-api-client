@@ -49,7 +49,7 @@ class Client
 		$this->aid = $aid;
 		$this->key = $key;
 		$this->currency = $currency;
-		
+
 		if ($mode === self::MODE_PRODUCTION) {
 			$this->baseUri = self::PRODUCTION_URI;
 		} else {
@@ -75,6 +75,26 @@ class Client
 		);
 
 		return $this->baseUri . '?' . http_build_query($query);
+	}
+
+
+	public function verifyNotificationParameters($aid, $typ, $amt, $cur, $ref, $res, $tid, $oid, $tss, $sig)
+	{
+		if ($aid !== $this->aid) {
+			throw new \Bazo\Trustpay\RuntimeException(sprintf('Given AID not correct. %s !== %s', $this->aid, $aid));
+		}
+
+		if ($cur !== $this->currency) {
+			throw new \Bazo\Trustpay\RuntimeException(sprintf('Given CUR not correct. %s !== %s', $this->currency, $cur));
+		}
+
+		$message = $aid . $typ . $amt . $cur . $ref . $res . $tid . $oid . $tss;
+
+		$signature = $this->signRequest($message);
+
+		if ($sig !== $signature) {
+			throw new \Bazo\Trustpay\RuntimeException(sprintf('Signature mismatch. %s !== %s', $this->currency, $cur));
+		}
 	}
 
 
