@@ -15,7 +15,7 @@ class Client
 {
 
 	const PRODUCTION_URI = 'https://ib.trustpay.eu/mapi/pay.aspx';
-	const TEST_URI = 'https://test.trustpay.eu/mapi/pay.aspx';
+	const TEST_URI = 'https://ib.test.trustpay.eu/mapi/pay.aspx';
 	const MODE_TEST = 'mode.test';
 	const MODE_PRODUCTION = 'mode.production';
 	const TEST_IP = '81.89.63.19';
